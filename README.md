@@ -1,6 +1,10 @@
 # splade_tira
 
-command to build the docker image:
+Command to build the dev container:
+
+```
+docker build -t mam10eks/splade_tira:0.0.1 -f .docker/Dockerfile.dev .
+```
 
 ```
 docker build -t registry.webis.de/code-research/tira/tira-user-tira-user-naverlabseurope/my-software:0.0.1 -f Dockerfile.base .

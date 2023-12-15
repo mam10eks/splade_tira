@@ -5,8 +5,8 @@ ENV PYTERRIER_HELPER_VERSION='0.0.7'
 
 COPY requirements.txt /workspace/
 
-RUN apt-get update \
-	&& apt-get install -y git openjdk-11-jdk \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install -y git openjdk-11-jdk git-lfs  \
 	&& pip3 install -r /workspace/requirements.txt \
 	&& python3 -c "import pyterrier as pt; pt.init(version='${PYTERRIER_VERSION}', helper_version='${PYTERRIER_HELPER_VERSION}');" \
 	&& python3 -c "import pyterrier as pt; pt.init(version='${PYTERRIER_VERSION}', helper_version='${PYTERRIER_HELPER_VERSION}', boot_packages=['com.github.terrierteam:terrier-prf:-SNAPSHOT']);"
@@ -15,10 +15,6 @@ ENV PYTHONPATH=/workspace
 
 RUN git clone https://huggingface.co/naver/splade-cocondenser-ensembledistil /workspace/splade-cocondenser-ensembledistil \
 	&& cd /workspace/splade-cocondenser-ensembledistil \
-	&& apt-get install -y git-lfs \
 	&& git lfs install \
-	&& git lfs pull
-
-COPY run_retrieval.py /workspace/
-
+	&& git lfs pull \
 
