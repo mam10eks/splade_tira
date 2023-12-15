@@ -7,14 +7,13 @@ docker build -t mam10eks/splade_tira:0.0.1 -f .docker/Dockerfile.dev .
 ```
 
 ```
-docker build -t registry.webis.de/code-research/tira/tira-user-tira-user-naverlabseurope/my-software:0.0.1 -f Dockerfile.base .
+docker build -t registry.webis.de/code-research/tira/tira-user-tira-user-naverlabseurope/my-software:0.0.1 -f .docker/Dockerfile .
 ```
 
 ```
 tira-run \
     --image registry.webis.de/code-research/tira/tira-user-tira-user-naverlabseurope/my-software:0.0.1 \
-    --input-directory sample-input-full-rank \
-    --command 'python3 /workspace/run_retrieval.py --input $inputDataset --output $outputDir'
+    --input-directory sample-input-full-rank
 ```
 
 tira-run --image registry.webis.de/code-research/tira/tira-user-pan23-cdav-baseline/galicia22a:0.0.2 --input-directory pan23-authorship-verification-train-20230322-training/ --output-directory o --command 'python3 /app/model/codes/predict.py -i $inputDataset -o $outputDir'
