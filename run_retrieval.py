@@ -1,16 +1,7 @@
-import os
 import argparse
 import pyterrier as pt
+from tira.third_party_integrations import ensure_pyterrier_is_loaded, persist_and_normalize_run
 
-if not pt.started():
-    pt.init(version=os.environ["PYTERRIER_VERSION"], helper_version=os.environ["PYTERRIER_HELPER_VERSION"]);
-
-import pandas as pd
-from tira.third_party_integrations import ensure_pyterrier_is_loaded, get_input_directory_and_output_directory, persist_and_normalize_run
-import json
-from tqdm import tqdm
-
-import pyt_splade
 
 def parse_args():
     parser = argparse.ArgumentParser(prog='Retrieve with SPLADE via PyterrierPisa.')
@@ -22,18 +13,17 @@ def parse_args():
 
 
 def main(args):
-    
     ensure_pyterrier_is_loaded()
-    
+    import pyt_splade
+
     print('Step 2: Load the data.')
-    
-    queries = pt.io.read_topics(args.input + '/queries.xml', format='trecxml')
-    
-    documents = [json.loads(i) for i in open(args.input + '/documents.jsonl', 'r')]
-    
+    dataset = pt.get_dataset(f'irds:{args.input}')
+    queries = dataset.get_topics('title')
+    documents = dataset.get_corpus_iter()
+
     print('Step 3: Create the Index.')
     splade = pyt_splade.SpladeFactory("/workspace/splade-cocondenser-ensembledistil")
-    iter_indexer = pt.IterDictIndexer("./index", pretokenised=True, meta={'docno' : 100})
+    iter_indexer = pt.IterDictIndexer("./index", pretokenised=True, meta={'docno' : 1000})
     
     from pyterrier_pisa import PisaIndex
     index = PisaIndex('./index', stemmer='none')
@@ -50,7 +40,6 @@ def main(args):
     
     
     print('Step 5: Persist Run.')
-    
     persist_and_normalize_run(run, output_file=args.output, system_name='SPLADE++-CoCondenser-EnsembleDistil', depth=1000)
 
 if __name__ == '__main__':
