@@ -1,5 +1,11 @@
 # splade_tira
 
+Run it locally via (still in progress):
+
+```
+python3 run_retrieval.py --input workshop-on-open-web-search/document-processing-20231027-training --output out
+```
+
 Command to build the dev container:
 
 ```
